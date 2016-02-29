@@ -1,5 +1,7 @@
 (ns delivery-robot.graph
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [delivery-robot.util :refer :all]
+            [delivery-robot.route :as route]))
 
 (defn create-node
   "create-node returns a hash map of a node name with no packages in it and
@@ -23,15 +25,27 @@
   (first
     (filter #(= (%1 :name) name) graph)))
 
-(defn in?
-  "true if coll contains elem"
-  [coll elem]
-  (some #(= elem %) coll))
-
 (defn not-visited
   "gets all the neighbours that aren't visited in a route"
   [neighbours route]
   (filter #(not (in? route (get %1 :name))) neighbours))
+
+(defn get-routes
+  ([graph a b] (get-routes graph (get-node a graph) [0 a] (not-visited (get (get-node a graph) :neighbours) [a]) b))
+  ([graph curr route next-moves dest]
+   (if (= (get curr :name) dest)
+    route
+    (flat
+      (map #(get-routes 
+              graph
+              (get-node (%1 :name) graph)
+              (route/add %1 route)
+              (not-visited (get (get-node (% :name) graph) :neighbours) (route/add %1 route))
+              dest) next-moves)))))
+
+(defn get-best-route
+  [graph a b]
+  (first (sort-by first (get-routes graph a b))))
 
 (defn parse-file
   "parse-file converts text into a data structure load-from-file can read"
