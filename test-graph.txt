@@ -1,6 +1,6 @@
 a -> b, c
 b -> a, d
 c -> a, d, e
-d -> b, c, f
+d -> b, c(100), f(100)
 e -> c, f
 f -> e, d

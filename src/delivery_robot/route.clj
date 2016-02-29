@@ -2,8 +2,5 @@
 
 (defn add
   [node route]
-  (into [] (flatten
-    (vector
-      (+ (first route) (node :cost))
-      (conj (into [] (rest route)) (node :name))))))
-
+  (let [cost (+ (first route) (node :cost))]
+    (into [] (concat [cost] (rest route)))))
