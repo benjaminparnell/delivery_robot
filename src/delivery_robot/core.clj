@@ -27,6 +27,6 @@
   [graph a b]
   (first (sort-by first (get-routes graph a b))))
 
-(get-routes (g/load-from-file "test-graph.txt") "a" "f")
-(get-best-route (g/load-from-file "test-graph.txt") "a" "f")
+; (get-routes (g/load-from-file "test-graph.txt") "a" "f")
+; (get-best-route (g/load-from-file "test-graph.txt") "a" "f")
 
