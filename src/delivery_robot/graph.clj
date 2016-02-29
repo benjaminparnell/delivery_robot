@@ -36,7 +36,7 @@
    (if (= (get curr :name) dest)
     route
     (flat
-      (map #(get-routes 
+      (pmap #(get-routes
               graph
               (get-node (%1 :name) graph)
               (route/add %1 route)
