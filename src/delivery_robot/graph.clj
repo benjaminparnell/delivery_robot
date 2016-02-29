@@ -23,6 +23,16 @@
   (first
     (filter #(= (%1 :name) name) graph)))
 
+(defn in?
+  "true if coll contains elem"
+  [coll elem]
+  (some #(= elem %) coll))
+
+(defn not-visited
+  "gets all the neighbours that aren't visited in a route"
+  [neighbours route]
+  (filter #(not (in? route (get %1 :name))) neighbours))
+
 (defn parse-file
   "parse-file converts text into a data structure load-from-file can read"
   [file]
