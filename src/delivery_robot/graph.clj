@@ -31,21 +31,21 @@
   (filter #(not (in? route (get %1 :name))) neighbours))
 
 (defn get-routes
-  ([graph a b] (get-routes graph (get-node a graph) [0 a] (not-visited (get (get-node a graph) :neighbours) [a]) b))
+  ([graph a b] (get-routes graph (get-node a graph) [0 a] (not-visited (get (get-node a graph) :neighbours) [0 a]) b))
   ([graph curr route next-moves dest]
    (if (= (get curr :name) dest)
     route
     (flat
       (pmap #(get-routes
               graph
-              (get-node (%1 :name) graph)
+              (get-node (get %1 :name) graph)
               (route/add %1 route)
               (not-visited (get (get-node (% :name) graph) :neighbours) (route/add %1 route))
               dest) next-moves)))))
 
 (defn get-best-route
-  [graph a b]
-  (first (sort-by first (get-routes graph a b))))
+  ([routes] (first (sort-by first routes)))
+  ([graph a b] (first (sort-by first (get-routes graph a b)))))
 
 (defn parse-file
   "parse-file converts text into a data structure load-from-file can read"

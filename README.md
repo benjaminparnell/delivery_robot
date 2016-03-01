@@ -4,9 +4,8 @@
 
 ## TODO
 
-* Get packages working and plan most efficient route for multiple packages
-  - This can be done by getting all variations of destination list (e.g. a b c)
-    and getting best paths for each variatio
+* If a room has no neighbours and isn't the destination, ignore it?
+* Some journeys might have a fixed endpoint? (currently always goes to office)
 
 ## License
 
