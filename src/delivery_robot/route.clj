@@ -3,4 +3,5 @@
 (defn add
   [node route]
   (let [cost (+ (first route) (node :cost))]
-    (into [] (concat [cost] (rest route)))))
+    (into [] (concat [cost] (rest route) [(node :name)]))))
+
