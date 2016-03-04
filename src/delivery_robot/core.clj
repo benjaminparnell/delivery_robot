@@ -25,7 +25,7 @@
     (let [from-packages (filter #(= (% :from) (room :name)) packages)]
      (if (empty? from-packages)
        room
-       (assoc room :packages (into (room :packages) (map :to from-packages)))))) graph))
+       (update-in room [:packages] into (map :to from-packages))))) graph))
 
 (defn run-scenarios
   [scenarios]

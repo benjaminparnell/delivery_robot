@@ -54,21 +54,21 @@
   [robot]
   (println (bold-white "Robot State:") (bold-red (no-graph robot))))
 
+(defn room-has-packages
+  "Checks if a room has packages"
+  [room]
+  (seq (room :packages)))
+
 (defn scan
   "Scan a graph for packages and return a list of where they are
   (Not where they are going to)"
   [graph]
   (distinct
     (reduce (fn [packages node]
-              (let [has-packages (not (empty? (node :packages)))]
+              (let [has-packages (room-has-packages node)]
                 (if has-packages
                   (into packages [(node :name)])
                   packages))) [] graph)))
-
-(defn room-has-packages
-  "Checks if a room has packages"
-  [room]
-  (not (empty? (room :packages))))
 
 (defn pick-up-packages
   [robot room]
@@ -126,28 +126,21 @@
       (println (bold-cyan "Move to") (bold-green room-name))
       (prn-state (move robot room-name))
       (if (room-has-packages room)
-        (do
-          (println (bold-yellow (format "Picking up packages %s from %s" (room :packages) room-name)))))
+        (println (bold-yellow (format "Picking up packages %s from %s" (room :packages) room-name))))
       (if (has-package-for robot room-name)
-        (do
-          (println (bold-yellow (format "Dropping package in %s" room-name)))))
+        (println (bold-yellow (format "Dropping package in %s" room-name))))
       (if (and (= 1 (count (rest route))) (not (room-has-packages room)))
         (do
           (println (bold-green "Done."))
           (move (drop-packages robot (room :name)) room-name))
-        (do
-          (let [robot (clean-destinations (move (drop-packages robot room-name) room-name))
-                route (recalculate route (room-has-packages room) robot room)
-                next-room (g/get-node (nth route 1) (robot :graph))]
-            (if (room-has-packages room)
-              (recur
-                route ; The route has changed, so calculate a new one.
-                next-room
-                (next-room :name)
-                (clear-room (pick-up-packages robot room) room))
-              (recur
-                route
-                next-room
-                (next-room :name)
-                robot))))))))
+        (let [robot (clean-destinations (move (drop-packages robot room-name) room-name))
+              route (recalculate route (room-has-packages room) robot room)
+              next-room (g/get-node (nth route 1) (robot :graph))]
+          (if (room-has-packages room)
+            (recur
+              route ; The route has changed, so calculate a new one.
+              next-room
+              (next-room :name)
+              (clear-room (pick-up-packages robot room) room))
+            (recur route next-room (next-room :name) robot)))))))
 

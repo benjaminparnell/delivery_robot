@@ -32,7 +32,7 @@
 (defn route-add
   [node route]
   (let [cost (+ (first route) (node :cost))]
-    (into [] (concat [cost] (rest route) [(node :name)]))))
+    (vec (concat [cost] (rest route) [(node :name)]))))
 
 (defn get-routes
   ([graph a b] (get-routes graph (get-node a graph) [0 a] (not-visited (get (get-node a graph) :neighbours) [0 a]) b))
