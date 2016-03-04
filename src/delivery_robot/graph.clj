@@ -60,8 +60,8 @@
 
 (defn perms
   [start dests]
-  (let [perms (combo/permutations (distinct (remove #(= start %) dests)))]
-    (map #(conj (into [start] (vec %))) perms)))
+  (let [perms (combo/permutations (distinct (remove #(or (= start %) (= "office" %)) dests)))]
+    (map #(conj (into [start] (vec %)) "office") perms)))
 
 (defn get-best-perm
   [coll graph]
