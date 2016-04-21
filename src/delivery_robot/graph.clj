@@ -30,11 +30,13 @@
   (filter #(not (in? route (get %1 :name))) neighbours))
 
 (defn route-add
+  "Add a node and its cost to a route"
   [node route]
   (let [cost (+ (first route) (node :cost))]
     (vec (concat [cost] (rest route) [(node :name)]))))
 
 (defn get-routes
+  "Get all the routes from a to b on the given graph"
   ([graph a b] (get-routes graph (get-node a graph) [0 a] (not-visited (get (get-node a graph) :neighbours) [0 a]) b))
   ([graph curr route next-moves dest]
    (if (= (get curr :name) dest)
@@ -48,6 +50,7 @@
               dest) next-moves)))))
 
 (defn get-best-route
+  "Sort a list of routes and return the cheapest one"
   ([routes] (first (sort-by first routes)))
   ([graph a b] (first (sort-by first (get-routes graph a b)))))
 
@@ -55,15 +58,17 @@
   "combines a list of routes into a single route"
   [coll]
   (map (fn [r]
-         (reduce (fn [prev curr]
-                   (into [(+ (first prev) (first curr))] (into (vec (rest prev)) (rest (rest curr))))) r)) coll))
+    (reduce (fn [prev curr]
+      (into [(+ (first prev) (first curr))] (into (vec (rest prev)) (rest (rest curr))))) r)) coll))
 
 (defn perms
+  "Get all the permutations of places to be travelled to"
   [start dests]
   (let [perms (combo/permutations (distinct (remove #(or (= start %) (= "office" %)) dests)))]
     (map #(conj (into [start] (vec %)) "office") perms)))
 
 (defn get-best-perm
+  "Get the best permutation out of the generated ones"
   [coll graph]
   (get-best-route (combine (map (fn [p]
     (let [del (partition 2 1 p)]

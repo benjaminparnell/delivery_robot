@@ -20,6 +20,7 @@
                            ])
 
 (defn place-scenario-packages
+  "Place packages from a scenario in a graph before its run"
   [packages graph]
   (map (fn [room]
     (let [from-packages (filter #(= (% :from) (room :name)) packages)]
@@ -28,6 +29,7 @@
        (update-in room [:packages] into (map :to from-packages))))) graph))
 
 (defn run-scenarios
+  "Run scenarios and print output to the screen"
   [scenarios]
   (doseq [scenario scenarios]
     (let [graph (place-scenario-packages (scenario :packages) assignment-graph)

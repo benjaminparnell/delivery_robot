@@ -1,6 +1,7 @@
 (ns delivery-robot.util)
 
 (defn flat
+  "Flattens a list of list of lists down to a list of lists."
   [s]
   (mapcat
     #(if (every? coll? %)
